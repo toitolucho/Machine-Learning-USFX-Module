@@ -1,28 +1,36 @@
-# Día 3: Regresión Lineal Simple y Múltiple
+# Guía de Trabajo - Clase 3: Regresión Lineal Simple y Múltiple
 
-Bienvenidos al tercer día del Módulo 4 del Diplomado en Ciencia de Datos. En esta sesión, los estudiantes darán el gran salto metodológico: dejarán atrás la etapa exclusiva de preprocesamiento de datos e ingresarán formalmente al mundo del **Machine Learning Predictivo**, entrenando, evaluando e interpretando sus primeros algoritmos de aprendizaje supervisado.
-
----
-
-## Estructura del Directorio
-
-Esta carpeta consolida de forma ordenada todo el ecosistema de aprendizaje preparado para la sesión 3:
-
-### 1. Material de Clase (Exposición Docente)
-- **`03_Presentacion_Clase.tex`**: Código fuente LaTeX para la presentación formal. Explica de manera muy didáctica (sin terminología excesivamente abstracta) los conceptos de regresión simple, múltiple, evaluación (RMSE/$R^2$) y uso de la librería de scikit-learn.
-- **`generar_graficas.py`**: Utilidad de Python que descarga datos reales y genera las imágenes PNG (`grafica_simple.png` y `grafica_multiple.png`). **Nota Docente:** Debe ejecutar este script antes de compilar el archivo `.tex`.
-
-### 2. Cuaderno Principal Guiado (Hands-On)
-- **`03_Regresion_Lineal.ipynb`**: Cuaderno Jupyter (estilo Databricks) enfocado en estimar **Cargos de Seguros Médicos**. Combina teoría continua, celdas de reto `# TODO` para que apliquen el preprocesamiento aprendido el Día 2, y bloques de código explicados *paso a paso* para la regresión algorítmica.
-- **`03_Guia_de_Trabajo_Soluciones.md`**: Su hoja de trucos. Contiene los fragmentos de código, sugerencias pedagógicas (como el uso de analogías) y las respuestas a las discusiones teóricas de los alumnos.
-
-### 3. Laboratorio de Evaluación (Asignación Estudiantil)
-- **`03_Laboratorio_Evaluacion.ipynb`**: Reto autónomo utilizando el clásico dataset de **Valuación Inmobiliaria en California**. El alumno se enfrenta a datos crudos en línea y debe aplicar el ciclo completo de vida del dato para predecir precios de viviendas.
-- **`03_Soluciones_Laboratorio.md`**: Solucionario completo del laboratorio inmobiliario. Incluye justificaciones sobre la inferencia analítica (el gigantesco impacto económico que detecta el modelo cuando una casa se aleja de la costa).
+Este documento proporciona una guía estructurada sobre el contenido y la ejecución de los cuadernos prácticos de la tercera clase del módulo. En esta sesión entraremos formalmente al mundo del Machine Learning Predictivo, dejando atrás la etapa exclusiva de preprocesamiento de datos.
 
 ---
 
-## Dinámica Pedagógica Sugerida
-1. Ejecute `generar_graficas.py` y compile la presentación. Exponga los cimientos teóricos y matemáticos utilizando el archivo PDF resultante.
-2. Intercale la teoría con el cuaderno `03_Regresion_Lineal.ipynb`. Deje que los estudiantes completen de memoria el bloque 1 (preprocesamiento) y guíelos en los bloques posteriores (entrenamiento algorítmico e inferencia monetaria).
-3. Entregue el cuaderno `03_Laboratorio_Evaluacion.ipynb` como asignación evaluativa o de fin de clase para confirmar la aprehensión del modelo lineal múltiple.
+## **Estructura de los Cuadernos**
+
+La sesión consta de dos cuadernos de Jupyter diseñados para asimilar teórica y prácticamente la construcción de modelos de Regresión Lineal.
+
+### **1. Cuaderno Principal Guiado: `03_Regresion_Lineal.ipynb`**
+*   **Propósito:** Demostrar paso a paso la implementación de modelos predictivos de regresión lineal simple y múltiple utilizando un dataset público de costos de seguros médicos.
+*   **Secciones Clave:**
+    *   *Preprocesamiento:* Repaso del Día 2 (imputación, One-Hot Encoding, escalado).
+    *   *Regresión Simple:* Predicción del costo del seguro utilizando un solo factor (Edad).
+    *   *Evaluación:* Comprensión matemática y en código de las métricas de error (RMSE y $R^2$).
+    *   *Regresión Múltiple:* Expansión de la ecuación a múltiples factores simultáneos para mejorar dramáticamente la precisión de las predicciones.
+    *   *Inferencia de Negocios:* Extracción de los coeficientes algorítmicos para interpretar el impacto económico real de cada variable (por ejemplo, el sobrecosto de ser fumador).
+
+### **2. Cuaderno de Laboratorio (Evaluación): `03_Laboratorio_Evaluacion.ipynb`**
+*   **Propósito:** Reto práctico de aplicación autónoma utilizando un dataset del mercado inmobiliario (California Housing).
+*   **Requerimientos a desarrollar:**
+    *   Extraer los datos directamente desde la web y realizar una auditoría de valores faltantes.
+    *   Imputar valores nulos en la columna de número de habitaciones y codificar la variable categórica sobre las cercanías al océano.
+    *   Analizar la correlación entre los ingresos per cápita y el valor de las viviendas.
+    *   Entrenar y comparar las métricas de desempeño (RMSE y $R^2$) entre un modelo simple y uno múltiple estandarizado.
+    *   Extraer los coeficientes matemáticos para concluir teóricamente el impacto de devaluación que sufre una vivienda al ubicarse tierra adentro frente a una vivienda costera.
+
+---
+
+## **Instrucciones de Ejecución para el Estudiante**
+
+1.  **Carga de archivos:** Importar los cuadernos `03_Regresion_Lineal.ipynb` y `03_Laboratorio_Evaluacion.ipynb` a su espacio de **Google Colaboratory** o abrirlos localmente mediante Jupyter Notebook.
+2.  **Ejecución Guiada:** Acompañar la exposición del docente ejecutando y comprendiendo secuencialmente el cuaderno guiado de seguros médicos. 
+3.  **Resolución de Ejercicios:** En su cuaderno de laboratorio asignado, completar estrictamente el código de Python faltante en los bloques marcados explícitamente con la etiqueta `# TODO`.
+4.  **Reporte Final:** Asegurarse de completar las respuestas teóricas requeridas al final del laboratorio evaluativo (Sección 5), argumentando el impacto económico basándose de manera rigurosa en los coeficientes arrojados por el modelo.
