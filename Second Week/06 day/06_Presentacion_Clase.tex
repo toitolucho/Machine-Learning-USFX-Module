@@ -1,0 +1,122 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{listings}
+
+\usetheme{Madrid}
+\usecolortheme{whale}
+
+\title[Pipelines y Buenas Prácticas]{Módulo 4: Aprendizaje Automático}
+\subtitle{Clase 6: Mini Proyecto y Arquitectura de Pipelines}
+\author{Diplomado en Ciencia de Datos}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% ---------------------------------------------------
+\begin{frame}{Objetivos de la Sesión}
+    \begin{itemize}
+        \item Evolucionar de la programación algorítmica a la \textbf{Ingeniería de Modelos (MLOps)}.
+        \item Entender el peligro del \textit{Data Leakage} (Fuga de Datos) en el preprocesamiento manual.
+        \item Comprender el concepto y estructura de un \textbf{Pipeline} en \texttt{scikit-learn}.
+        \item Automatizar la imputación, el escalado y la clasificación en una sola línea de ensamblaje.
+    \end{itemize}
+\end{frame}
+
+% ---------------------------------------------------
+\begin{frame}{El Problema: Procesamiento Manual}
+    Hasta hoy, hemos construido modelos paso a paso:
+    \vspace{0.3cm}
+    \begin{enumerate}
+        \item Tomar los datos crudos.
+        \item Rellenar los valores nulos (Imputar).
+        \item Estandarizar los datos (Escalar).
+        \item Entrenar el modelo.
+    \end{enumerate}
+    \vspace{0.3cm}
+    \textbf{¿Cuál es el riesgo?} Si aplicamos estas transformaciones de forma manual, es muy fácil olvidar un paso al evaluar nuevos datos, o peor aún, utilizar datos del futuro (Set de Prueba) para calcular promedios de imputación o escalado (\textbf{Data Leakage}).
+\end{frame}
+
+% ---------------------------------------------------
+\begin{frame}{La Solución: Línea de Ensamblaje (Pipeline)}
+    \begin{center}
+        % Referencia a la gráfica generada por generar_graficas.py
+        \includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{pipeline_diagrama.png}
+    \end{center}
+\end{frame}
+
+% ---------------------------------------------------
+\begin{frame}{Anatomía de un Pipeline (Paso a Paso)}
+    Un Pipeline es un objeto que encapsula múltiples pasos secuenciales.
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item \textbf{Estaciones (Transformers):} Cada paso intermedio debe tener las funciones \texttt{fit()} y \texttt{transform()} para modificar los datos (ej. Imputador y Escalador).
+        \item \textbf{Cierre (Estimator):} El último paso de la cadena debe ser obligatoriamente un modelo predictivo, el cual posee la función \texttt{predict()} (ej. Árbol de Decisión).
+    \end{itemize}
+\end{frame}
+
+% ---------------------------------------------------
+\begin{frame}[fragile]{Implementación en Python: Importación de Herramientas}
+    Primero, importamos todas las estaciones de nuestra fábrica:
+    \vspace{0.3cm}
+    \begin{verbatim}
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
+from sklearn.tree import DecisionTreeClassifier
+    \end{verbatim}
+    \vspace{0.3cm}
+    Cada una de estas clases representa una máquina independiente que debemos ensamblar.
+\end{frame}
+
+% ---------------------------------------------------
+\begin{frame}[fragile]{Implementación en Python: Ensamblaje}
+    Se declara el Pipeline utilizando una lista de tuplas. Cada tupla contiene un nombre identificador y la herramienta instanciada.
+    \vspace{0.3cm}
+    \begin{verbatim}
+mi_fabrica = Pipeline(steps=[
+    ('limpiador', SimpleImputer(strategy='mean')),
+    ('escalador', StandardScaler()),
+    ('modelo', DecisionTreeClassifier(max_depth=4))
+])
+    \end{verbatim}
+    \vspace{0.3cm}
+    \textbf{Punto Crítico:} El orden es estrictamente secuencial. Los datos crudos entrarán por 'limpiador' y saldrán por 'modelo'.
+\end{frame}
+
+% ---------------------------------------------------
+\begin{frame}[fragile]{Implementación en Python: Encendido Total}
+    Una vez ensamblado el Pipeline, todo el flujo de trabajo se simplifica drásticamente:
+    \vspace{0.3cm}
+    \begin{verbatim}
+# Todo el preprocesamiento y entrenamiento ocurre aquí
+mi_fabrica.fit(X_train, y_train)
+
+# El preprocesamiento se aplica automáticamente a los 
+# datos de evaluación antes de predecir
+predicciones = mi_fabrica.predict(X_test)
+    \end{verbatim}
+    \vspace{0.3cm}
+    Esta estructura garantiza que el modelo puede ser puesto en producción y recibir datos crudos de forma segura.
+\end{frame}
+
+% ---------------------------------------------------
+\begin{frame}[fragile]
+    \begin{center}
+        \Large \textbf{Fin de la Presentación Teórica}\\
+        \vspace{0.5cm}
+        \normalsize Transición al Mini Proyecto:\\
+        \vspace{0.2cm}
+        \verb|06_Pipelines_Mini_Proyecto.ipynb|\\
+        \vspace{0.2cm}
+        \verb|06_Laboratorio_Evaluacion.ipynb|
+    \end{center}
+\end{frame}
+
+\end{document}
