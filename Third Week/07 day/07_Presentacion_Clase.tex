@@ -1,0 +1,203 @@
+\documentclass{beamer}
+\usetheme{Madrid}
+\usecolortheme{whale}
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    commentstyle=\color{green!60!black},
+    frame=single,
+    showstringspaces=false
+}
+\title{Módulo 4: Machine Learning}
+\subtitle{Día 07: Modelos de Ensamble \\ (La Sabiduría Colectiva)}
+\author{Diplomado en Ciencia de Datos}
+\date{Semana 3}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{¿Por qué fallan los modelos individuales?}
+Hasta ahora, hemos confiado nuestras predicciones a un solo "experto" (un Árbol de Decisión o una Regresión Logística).
+
+\vspace{0.5cm}
+\textbf{El Problema de los Árboles Individuales:}
+\begin{itemize}
+    \item \textbf{Alta Varianza (Overfitting):} Si dejamos que un árbol crezca sin control, memorizará todos los detalles del dataset (incluyendo el ruido). 
+    \item Si le mostramos datos ligeramente nuevos, fallará catastróficamente.
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{Solución: Ensamble (La Sabiduría de las Multitudes)}
+En lugar de preguntarle a un solo experto brillante pero temperamental, le preguntaremos a 100 expertos promedio y promediaremos sus respuestas.
+\end{frame}
+
+\begin{frame}
+\frametitle{Concepto 1: Bagging (Bootstrap Aggregating)}
+\textbf{Objetivo:} Reducir la Varianza (el Overfitting). \\
+\textbf{Algoritmo Estrella:} \textit{Random Forest} (Bosque Aleatorio).
+
+\vspace{0.3cm}
+\textbf{¿Cómo funciona?}
+\begin{enumerate}
+    \item Creamos cientos de sub-datasets tomando muestras aleatorias del dataset original (permitiendo elementos repetidos).
+    \item Entrenamos un árbol de decisión distinto en cada sub-dataset.
+    \item Para hacer una predicción final, los cientos de árboles "votan" democráticamente. La clase con más votos gana.
+\end{enumerate}
+
+\begin{center}
+\includegraphics[width=\textwidth, height=3.5cm, keepaspectratio]{bagging_diagram.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Concepto 2: Boosting}
+\textbf{Objetivo:} Reducir el Sesgo (el Underfitting). \\
+\textbf{Algoritmos Estrellas:} \textit{Gradient Boosting, XGBoost}.
+
+\vspace{0.3cm}
+\textbf{¿Cómo funciona?}
+\begin{enumerate}
+    \item Entrenamos un modelo muy simple (débil) que cometerá muchos errores.
+    \item Calculamos exactamente en qué registros se equivocó.
+    \item Entrenamos un \textbf{segundo modelo} que se especialice EXCLUSIVAMENTE en corregir los errores del primer modelo.
+    \item Repetimos secuencialmente cientos de veces.
+\end{enumerate}
+
+\begin{center}
+\includegraphics[width=\textwidth, height=3.5cm, keepaspectratio]{boosting_diagram.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Impacto en el Negocio}
+¿Por qué la industria financiera y el retail aman los Ensambles?
+
+\vspace{0.5cm}
+\begin{itemize}
+    \item \textbf{Fraude Bancario:} XGBoost es el rey de las competiciones de Kaggle porque es extremadamente preciso detectando anomalías sutiles en secuencias de transacciones.
+    \item \textbf{Fuga de Clientes (Churn):} Random Forest proporciona una excelente "Importancia de Variables" (Feature Importance), permitiendo al negocio saber \textit{por qué} se van los clientes, no solo \textit{quiénes} se van.
+\end{itemize}
+
+\vspace{0.5cm}
+\end{frame}
+
+\begin{frame}
+\frametitle{Hiperparámetros Críticos: Random Forest}
+Para evitar que nuestro "Consejo de Sabios" se salga de control, debemos limitar su crecimiento:
+
+\vspace{0.3cm}
+\begin{itemize}
+    \item \texttt{n\_estimators}: Número de árboles en el bosque (ej. 100 o 500). Más árboles = más estabilidad, pero mayor costo computacional.
+    \item \texttt{max\_depth}: Profundidad máxima de cada árbol. Evita que los árboles memoricen a clientes individuales.
+    \item \texttt{class\_weight='balanced'}: \textbf{¡Vital en Fraudes!} Obliga al bosque a prestarle la misma atención a la clase minoritaria (fraude) que a la mayoritaria (legítimo).
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Hiperparámetros Críticos: XGBoost}
+El modelo evolutivo es más poderoso, pero requiere más "sintonización" matemática:
+
+\vspace{0.3cm}
+\begin{itemize}
+    \item \texttt{learning\_rate} (Tasa de aprendizaje): ¿Qué tan agresivo es el modelo al corregir los errores del árbol anterior? Valores pequeños (0.01) requieren más árboles, pero generalizan mejor.
+    \item \texttt{n\_estimators}: Cuántas iteraciones de corrección de errores permitiremos.
+    \item \texttt{subsample}: Qué porcentaje de datos usamos en cada iteración para evitar el sobreajuste.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{El Poder de la "Importancia de Variables"}
+\textbf{Problema:} La junta directiva no entiende qué es un Bosque Aleatorio. Solo quieren saber por qué se van los clientes.
+
+\vspace{0.5cm}
+\textbf{Feature Importance (Importancia de Atributos):}
+\begin{itemize}
+    \item Los modelos de Ensamble pueden calcular matemáticamente cuántas veces una variable (ej. \textit{Retraso en Pagos}) fue utilizada para tomar una decisión crítica.
+    \item Nos devuelve un ranking de impacto.
+    \item \textbf{Impacto:} Permite pasar de ser un modelo "predictivo" a ser una herramienta de "diagnóstico" para el negocio.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Pros y Contras de los Ensambles}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Ventajas:}
+\begin{itemize}
+    \item \textcolor{green!70!black}{Rendimiento superior:} Rara vez son superados en datos tabulares (Excel/SQL).
+    \item \textcolor{green!70!black}{Estabilidad:} Inmunes a valores atípicos severos.
+    \item \textcolor{green!70!black}{Versátiles:} Manejan relaciones no lineales sin esfuerzo.
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Desventajas:}
+\begin{itemize}
+    \item \textcolor{red!70!black}{Caja Negra:} Es imposible dibujar o imprimir un modelo compuesto por 500 árboles. Se pierde la interpretabilidad visual directa.
+    \item \textcolor{red!70!black}{Costo Computacional:} Entrenar cientos de modelos toma significativamente más tiempo y memoria RAM.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{El Motor Algorítmico}
+¿Cómo toma decisiones matemáticamente un Ensamble?
+
+\vspace{0.3cm}
+\textbf{1. En Clasificación (Ej. Fraude o No Fraude):}
+\begin{itemize}
+    \item \textbf{Random Forest:} Utiliza "Voto Mayoritario Suave" (\textit{Soft Voting}). Promedia las probabilidades matemáticas estimadas por sus 100 árboles. Si el promedio de todos los árboles indica un 65\% de probabilidad de Fraude, la predicción final es Fraude.
+    \item \textbf{XGBoost:} Asigna un "peso" a cada árbol. Los árboles secuenciales que lograron reducir la Tasa de Error (\textit{Loss Function}) más drásticamente tienen un voto que vale el doble o el triple al final.
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{2. En Regresión (Ej. Predecir Ventas en Dólares):}
+\begin{itemize}
+    \item Ambos algoritmos calculan el promedio aritmético exacto de las estimaciones numéricas de todos los árboles del ensamble.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Comandos Útiles en Python}
+Implementar estos modelos requiere solo unas líneas de código:
+
+\begin{lstlisting}
+# 1. Random Forest (Bagging)
+from sklearn.ensemble import RandomForestClassifier
+
+bosque = RandomForestClassifier(n_estimators=100, class_weight='balanced')
+bosque.fit(X_train, y_train)
+pred_rf = bosque.predict(X_test)
+importancia = bosque.feature_importances_  # <-- Auditoría de variables
+
+# 2. XGBoost (Boosting Evolutivo)
+from xgboost import XGBClassifier
+
+modelo_xgb = XGBClassifier(learning_rate=0.1, n_estimators=100)
+modelo_xgb.fit(X_train, y_train)
+pred_xgb = modelo_xgb.predict(X_test)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+\frametitle{Resumen}
+\begin{center}
+\vspace{1cm}
+\textbf{\Large ¡Vamos a la práctica!} \\
+\vspace{0.5cm}
+Aplicaremos estos conceptos en Python para detectar Fuga de Clientes y Fraude Financiero.
+\end{center}
+\end{frame}
+
+\end{document}
