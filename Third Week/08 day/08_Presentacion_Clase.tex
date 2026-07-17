@@ -1,0 +1,84 @@
+\documentclass{beamer}
+\usetheme{Madrid}
+\usecolortheme{whale}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+\title[Mega-Pipelines y CRISP-DM]{Día 08: Aplicaciones Industriales y Mega-Pipelines}
+\subtitle{Diplomado en Ciencia de Datos}
+\author{Docente Experto}
+\institute{Universidad San Francisco Xavier (USFX)}
+\date{Módulo 4: Aprendizaje Automático}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Objetivos de la Sesión}
+    \begin{itemize}
+        \item \textbf{1.} Comprender la metodología \textbf{CRISP-DM} estándar en la industria.
+        \item \textbf{2.} Identificar y prevenir el peligroso problema de la \textbf{Fuga de Datos (Data Leakage)}.
+        \item \textbf{3.} Construir un \textbf{Mega-Pipeline} escalable utilizando Scikit-Learn.
+        \item \textbf{4.} Realizar un análisis de impacto financiero a través de la \textbf{Matriz de Confusión}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{El Estándar Industrial: CRISP-DM}
+    La metodología \textbf{Cross-Industry Standard Process for Data Mining} asegura que los proyectos de Inteligencia Artificial no fracasen en producción.
+    \vspace{0.5cm}
+    \begin{center}
+        \includegraphics[height=5.5cm,keepaspectratio]{crisp_dm.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{El Peligro Oculto: Data Leakage (Fuga de Datos)}
+    \begin{alertblock}{Definición Fatal}
+        Ocurre cuando el algoritmo accede a información del conjunto de pruebas (examen) durante la fase de entrenamiento.
+    \end{alertblock}
+    
+    \textbf{¿Cómo sucede accidentalmente?}
+    \begin{itemize}
+        \item Imputar valores nulos (promedio/mediana) usando \textbf{todo} el dataset.
+        \item Escalar variables utilizando el mínimo y máximo de \textbf{todo} el dataset.
+    \end{itemize}
+    \vspace{0.5cm}
+    \textbf{Consecuencia:} El modelo reportará 99\% de exactitud en el laboratorio, pero fracasará catastróficamente el día que se lance a producción.
+\end{frame}
+
+\begin{frame}{La Solución Definitiva: El Pipeline}
+    Para evitar la Fuga de Datos, empaquetamos las instrucciones de limpieza y el algoritmo en una sola tubería blindada.
+    \vspace{0.5cm}
+    \begin{center}
+        \includegraphics[height=5.5cm,keepaspectratio]{pipeline_arch.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Evaluación Empresarial: Falsos Positivos vs Negativos}
+    Las métricas de exactitud (\textit{Accuracy}) son inútiles para la Junta Directiva. Todo debe traducirse a \textbf{Dólares (Costos y Riesgos)}.
+    
+    \vspace{0.5cm}
+    \begin{block}{Ejemplo Médico: Predicción de Cáncer}
+        \begin{itemize}
+            \item \textbf{Falso Positivo (Susto):} Decirle a un paciente sano que tiene cáncer. Costo: Ansiedad y exámenes adicionales.
+            \item \textbf{Falso Negativo (Tragedia):} Decirle a un paciente con cáncer que está sano. Costo: Pérdida de la vida.
+        \end{itemize}
+    \end{block}
+    
+    \vspace{0.3cm}
+    \textbf{Lección de Negocios:} Los Data Scientists ajustan los Pipelines para minimizar el tipo de error que le cueste más caro a la empresa.
+\end{frame}
+
+\begin{frame}{Siguientes Pasos}
+    \begin{center}
+        \Large \textbf{¡Manos al Código!}
+        \vspace{0.5cm}
+        
+        \normalsize Pasemos al entorno de Google Colab para programar nuestro Mega-Pipeline desde cero y exportarlo a producción.
+    \end{center}
+\end{frame}
+
+\end{document}
